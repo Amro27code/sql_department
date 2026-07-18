@@ -1,0 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:sqflite_department/core/routes_manager.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: RouteNames.init,
+      routes: RoutesManager.route,
+    );
+  }
+}
