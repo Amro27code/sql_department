@@ -19,54 +19,101 @@ class MySqfliteDatabase extends CRUD {
   final String _salesProductNameColumn = "sales_product_name";
   final String _salesUserNameColumn = "sales_user_name";
 
-  void initDatabase() async {
+  Database? _database;
+
+  Future<Database> initDatabase() async {
     String path = await sqflite.getDatabasesPath();
 
     String managementDatabaseName = "management.db";
     String myPath = join(path, managementDatabaseName);
 
     int version = 1;
-    sqflite.openDatabase(myPath, version: version, onCreate: _onCreate);
+    _database ??= await sqflite.openDatabase(
+      myPath,
+      version: version,
+      onCreate: _onCreate,
+    );
+    return _database!;
   }
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      "CREATE TABLE $_userTable"
-      " ($_userIdColumn INTEGER PRIMARY KEY,"
+      "CREATE TABLE IF NOT EXISTS $_userTable"
+      " ($_userIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
       "$_userNameColumn TEXT);",
     );
     await db.execute(
-      "CREATE TABLE $_productTable ($_productIdColumn INTEGER PRIMARY KEY,$_productNameColumn TEXT,$_productPriceColumn REAL,$_productCountColumn INTEGER);",
+      "CREATE TABLE IF NOT EXISTS $_productTable ($_productIdColumn INTEGER PRIMARY KEY AUTOINCREMENT ,$_productNameColumn TEXT,$_productPriceColumn REAL,$_productCountColumn INTEGER);",
     );
     await db.execute(
-      "CREATE TABLE $_salesTable"
-      " ($_salesIdColumn INTEGER PRIMARY KEY,"
+      "CREATE TABLE IF NOT EXISTS $_salesTable"
+      " ($_salesIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
       "$_salesUserNameColumn TEXT,"
       "$_salesProductNameColumn TEXT);",
     );
   }
 
   @override
-  int delete() {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<bool> delete() async {
+    await initDatabase();
+
+    int deleted = await _database!.delete(
+      _userTable,
+      where: "$_userIdColumn=2",
+    );
+    await _database!.close();
+
+    return deleted == 0 ? false : true;
+  }
+
+  Future<bool> insertToUser({required String userName}) {
+    return insert(tableName: _userTable, values: {_userNameColumn: userName});
+  }
+
+  Future<bool> insertToProduct({
+    required String name,
+    required int count,
+    required double price,
+  }) async {
+    return insert(
+      tableName: _productTable,
+      values: {
+        _productNameColumn: name,
+        _productCountColumn: count,
+        _productPriceColumn: price,
+      },
+    );
   }
 
   @override
-  int insert() {
-    // TODO: implement insert
-    throw UnimplementedError();
+  Future<bool> insert({
+    required Map<String, Object?> values,
+    required String tableName,
+  }) async {
+    await initDatabase();
+
+    int inserted = await _database!.insert(tableName, values);
+    await _database!.close();
+    return inserted == 0 ? false : true;
   }
 
   @override
-  int select() {
-    // TODO: implement select
-    throw UnimplementedError();
+  Future<List<Map<String,Object?>>> select({required String tableName})async {
+    await initDatabase();
+
+    List<Map<String,Object?>> data = await _database!.query(tableName);
+    await _database!.close();
+    return data;
   }
 
   @override
-  int update() {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<bool> update() async {
+    await initDatabase();
+
+    int updated = await _database!.insert(_userTable, {
+      _userNameColumn: "amro",
+    });
+    await _database!.close();
+    return updated == 0 ? false : true;
   }
 }
