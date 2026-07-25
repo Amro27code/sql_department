@@ -97,22 +97,30 @@ class MySqfliteDatabase extends CRUD {
     return inserted == 0 ? false : true;
   }
 
+  Future<List<Map<String, Object?>>> selectUser() async {
+    return select(tableName: _userTable);
+  }
+
+  Future<List<Map<String, Object?>>> selectProduct() async {
+    return select(tableName: _productTable);
+  }
+
   @override
-  Future<List<Map<String,Object?>>> select({required String tableName})async {
+  Future<List<Map<String, Object?>>> select({required String tableName}) async {
     await initDatabase();
 
-    List<Map<String,Object?>> data = await _database!.query(tableName);
+    List<Map<String, Object?>> data = await _database!.query(tableName);
     await _database!.close();
     return data;
   }
 
   @override
-  Future<bool> update() async {
+  Future<bool> update({required String userName, required int id}) async {
     await initDatabase();
 
-    int updated = await _database!.insert(_userTable, {
-      _userNameColumn: "amro",
-    });
+    int updated = await _database!.update(_userTable, {
+      _userNameColumn: userName,
+    }, where: "$_userIdColumn=$id");
     await _database!.close();
     return updated == 0 ? false : true;
   }

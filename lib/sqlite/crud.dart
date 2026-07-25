@@ -5,7 +5,7 @@ abstract class CRUD {
     required String tableName,
   });
 
-  Future<bool> update();
+  Future<bool> update({required String userName,required int id});
 
   Future<bool> delete();
 
