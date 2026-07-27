@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_department/controller/user_controller.dart';
 import 'package:sqflite_department/sqlite/my_sqflite_database.dart';
 
-class Init extends StatefulWidget {
-  const Init({super.key});
+class ProductScreen extends StatefulWidget {
+  const ProductScreen({super.key});
 
   @override
-  State<Init> createState() => _InitState();
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _InitState extends State<Init> {
+class _ProductScreenState extends State<ProductScreen> {
   // TextEditingController userNameController = TextEditingController();
   // List<Map<String, Object?>> data = [];
   late UserController _userController;
