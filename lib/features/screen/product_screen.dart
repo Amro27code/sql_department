@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_department/controller/user_controller.dart';
+import 'package:sqflite_department/controller/product_controller.dart';
 import 'package:sqflite_department/sqlite/my_sqflite_database.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -12,25 +12,25 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   // TextEditingController userNameController = TextEditingController();
   // List<Map<String, Object?>> data = [];
-  late UserController _userController;
+  late ProductController _productController;
 
   @override
   void initState() {
     super.initState();
-    _userController = UserController();
+    _productController = ProductController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true,title: Text("Product Screen"),),
+      appBar: AppBar(centerTitle: true, title: Text("Product Screen")),
       body: Padding(
         padding: const EdgeInsetsGeometry.all(16),
         child: Column(
           mainAxisAlignment: .center,
           children: [
             TextField(
-              controller: _userController.userNameController,
+              controller: _productController.productNameController,
               decoration: InputDecoration(
                 label: Text("Enter your user name"),
                 border: OutlineInputBorder(
@@ -39,11 +39,33 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
             ),
+            TextField(
+              controller: _productController.productPriceController,
+              keyboardType: .number,
+              decoration: InputDecoration(
+                label: Text("Enter your price"),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+            ),
+            TextField(
+              controller: _productController.productCountController,
+              keyboardType: .number,
+              decoration: InputDecoration(
+                label: Text("Enter your count"),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
-                // _userController.mySqflite.delete();
-                _userController.insertUser();
-                _userController.selectUser();
+                // _productController.mySqflite.delete();
+                _productController.insert();
+                _productController.select();
                 setState(() {});
               },
               child: Text("Inserted"),
@@ -63,9 +85,10 @@ class _ProductScreenState extends State<ProductScreen> {
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    int id = _userController.data[index]["user_id"] as int;
-                    _userController.userNameEditController.text =
-                        "${_userController.data[index]["user_name"]}";
+                    int id =
+                        _productController.data[index]["product_id"] as int;
+                    // _productController.user.text =
+                    //     "${_productController.data[index]["user_name"]}";
                     showModalBottomSheet(
                       context: context,
                       builder: (context) => Container(
@@ -74,42 +97,39 @@ class _ProductScreenState extends State<ProductScreen> {
                           children: [
                             TextField(
                               controller:
-                                  _userController.userNameEditController,
+                                  _productController.productNameController,
                               decoration: InputDecoration(
-                                // label: Text(
-                                //   "${_userController.data[index]["user_name"]}",
-                                // ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _userController.updateUser(
-                                      name: _userController
-                                          .userNameEditController
-                                          .text
-                                          .toString(),
-                                      id: id,
-                                    );
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("Update"),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _userController.deleteFromUser(id: id);
-                                    setState(() {});
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("Delete"),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     ElevatedButton(
+                            //       onPressed: () {
+                            //         _productController.updateUser(
+                            //           name: _productController
+                            //               .userNameEditController
+                            //               .text
+                            //               .toString(),
+                            //           id: id,
+                            //         );
+                            //         Navigator.of(context).pop();
+                            //       },
+                            //       child: Text("Update"),
+                            //     ),
+                            //     ElevatedButton(
+                            //       onPressed: () {
+                            //         _productController.deleteFromUser(id: id);
+                            //         setState(() {});
+                            //         Navigator.of(context).pop();
+                            //       },
+                            //       child: Text("Delete"),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
@@ -118,12 +138,14 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: Row(
                     mainAxisAlignment: .spaceEvenly,
                     children: [
-                      Text("${_userController.data[index]["user_id"]}"),
-                      Text("${_userController.data[index]["user_name"]}"),
+                      Text("${_productController.data[index]["product_id"]}"),
+                      Text("${_productController.data[index]["product_name"]}"),
+                      Text("${_productController.data[index]["price"]}"),
+                      Text("${_productController.data[index]["count"]}"),
                     ],
                   ),
                 ),
-                itemCount: _userController.data.length,
+                itemCount: _productController.data.length,
               ),
             ),
           ],

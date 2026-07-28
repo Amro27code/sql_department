@@ -12,12 +12,12 @@ class Init extends StatefulWidget {
 class _InitState extends State<Init> {
   // TextEditingController userNameController = TextEditingController();
   // List<Map<String, Object?>> data = [];
-  late UserController _userController;
+  late ProductController _userController;
 
   @override
   void initState() {
     super.initState();
-    _userController = UserController();
+    _userController = ProductController();
   }
 
   @override

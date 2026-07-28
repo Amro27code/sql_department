@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../sqlite/my_sqflite_database.dart';
 
-class UserController {
+class ProductController {
   late TextEditingController userNameController;
   late TextEditingController userNameEditController;
 
@@ -10,7 +10,7 @@ class UserController {
   String userNameColumn = MySqfliteDatabase().userNameColumn;
   String userIdColumn = MySqfliteDatabase().userIdColumn;
 
-  UserController() {
+  ProductController() {
     // mySqflite = MySqfliteDatabase();
     userNameController = TextEditingController();
     userNameEditController = TextEditingController();
