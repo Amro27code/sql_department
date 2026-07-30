@@ -24,7 +24,7 @@ class MainScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(RouteNames.init);
+              Navigator.of(context).pushNamed(RouteNames.sales);
             },
             child: Text("Sales Screen"),
           ),
