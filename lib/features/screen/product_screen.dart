@@ -10,8 +10,6 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  // TextEditingController userNameController = TextEditingController();
-  // List<Map<String, Object?>> data = [];
   late ProductController _productController;
 
   @override
@@ -23,6 +21,7 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(centerTitle: true, title: Text("Product Screen")),
       body: Padding(
         padding: const EdgeInsetsGeometry.all(16),
@@ -87,8 +86,15 @@ class _ProductScreenState extends State<ProductScreen> {
                   onTap: () {
                     int id =
                         _productController.data[index]["product_id"] as int;
-                    // _productController.user.text =
-                    //     "${_productController.data[index]["user_name"]}";
+
+                    _productController.productEditNameController.text =
+                    _productController.data[index]["product_name"].toString();
+
+                    _productController.productEditCountController.text =
+                    _productController.data[index]["count"].toString();
+
+                    _productController.productEditPriceController.text =
+                    _productController.data[index]["price"].toString();
                     showModalBottomSheet(
                       context: context,
                       builder: (context) => Container(
@@ -97,7 +103,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           children: [
                             TextField(
                               controller:
-                                  _productController.productNameController,
+                                  _productController.productEditNameController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -105,31 +111,66 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                               ),
                             ),
-                            // Row(
-                            //   children: [
-                            //     ElevatedButton(
-                            //       onPressed: () {
-                            //         _productController.updateUser(
-                            //           name: _productController
-                            //               .userNameEditController
-                            //               .text
-                            //               .toString(),
-                            //           id: id,
-                            //         );
-                            //         Navigator.of(context).pop();
-                            //       },
-                            //       child: Text("Update"),
-                            //     ),
-                            //     ElevatedButton(
-                            //       onPressed: () {
-                            //         _productController.deleteFromUser(id: id);
-                            //         setState(() {});
-                            //         Navigator.of(context).pop();
-                            //       },
-                            //       child: Text("Delete"),
-                            //     ),
-                            //   ],
-                            // ),
+                            TextField(
+                              controller:
+                                  _productController.productEditCountController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                            TextField(
+                              controller:
+                                  _productController.productEditPriceController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _productController.update(
+                                      name: _productController
+                                          .productEditNameController
+                                          .text
+                                          .toString(),
+                                      price:
+                                          double.parse(
+                                            _productController
+                                                .productEditPriceController
+                                                .text
+                                                // .toString(),
+                                          ) ,
+                                      count:
+                                          int.parse(
+                                            _productController
+                                                .productEditCountController
+                                                .text
+                                                // .toString(),
+                                          ) ,
+                                      id: id,
+                                    );
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Update"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _productController.delete(id: id);
+                                    _productController.select();
+                                    setState(() {});
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Delete"),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

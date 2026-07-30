@@ -12,25 +12,25 @@ class Init extends StatefulWidget {
 class _InitState extends State<Init> {
   // TextEditingController userNameController = TextEditingController();
   // List<Map<String, Object?>> data = [];
-  late ProductController _userController;
+  late ProductController _;
 
   @override
   void initState() {
     super.initState();
-    _userController = ProductController();
+    _ = ProductController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true,title: Text("Product Screen"),),
+      appBar: AppBar(centerTitle: true,title: Text("User Screen"),),
       body: Padding(
         padding: const EdgeInsetsGeometry.all(16),
         child: Column(
           mainAxisAlignment: .center,
           children: [
             TextField(
-              controller: _userController.userNameController,
+              controller: _.userNameController,
               decoration: InputDecoration(
                 label: Text("Enter your user name"),
                 border: OutlineInputBorder(
@@ -41,9 +41,9 @@ class _InitState extends State<Init> {
             ),
             ElevatedButton(
               onPressed: () {
-                // _userController.mySqflite.delete();
-                _userController.insertUser();
-                _userController.selectUser();
+                // _.mySqflite.delete();
+                _.insertUser();
+                _.selectUser();
                 setState(() {});
               },
               child: Text("Inserted"),
@@ -63,9 +63,9 @@ class _InitState extends State<Init> {
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    int id = _userController.data[index]["user_id"] as int;
-                    _userController.userNameEditController.text =
-                        "${_userController.data[index]["user_name"]}";
+                    int id = _.data[index]["user_id"] as int;
+                    _.userNameEditController.text =
+                        "${_.data[index]["user_name"]}";
                     showModalBottomSheet(
                       context: context,
                       builder: (context) => Container(
@@ -74,11 +74,8 @@ class _InitState extends State<Init> {
                           children: [
                             TextField(
                               controller:
-                                  _userController.userNameEditController,
+                                  _.userNameEditController,
                               decoration: InputDecoration(
-                                // label: Text(
-                                //   "${_userController.data[index]["user_name"]}",
-                                // ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(color: Colors.blue),
@@ -89,8 +86,8 @@ class _InitState extends State<Init> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    _userController.updateUser(
-                                      name: _userController
+                                    _.updateUser(
+                                      name: _
                                           .userNameEditController
                                           .text
                                           .toString(),
@@ -102,7 +99,7 @@ class _InitState extends State<Init> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    _userController.deleteFromUser(id: id);
+                                    _.deleteFromUser(id: id);
                                     setState(() {});
                                     Navigator.of(context).pop();
                                   },
@@ -118,12 +115,12 @@ class _InitState extends State<Init> {
                   child: Row(
                     mainAxisAlignment: .spaceEvenly,
                     children: [
-                      Text("${_userController.data[index]["user_id"]}"),
-                      Text("${_userController.data[index]["user_name"]}"),
+                      Text("${_.data[index]["user_id"]}"),
+                      Text("${_.data[index]["user_name"]}"),
                     ],
                   ),
                 ),
-                itemCount: _userController.data.length,
+                itemCount: _.data.length,
               ),
             ),
           ],

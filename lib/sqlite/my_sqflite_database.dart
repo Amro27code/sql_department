@@ -11,6 +11,7 @@ class MySqfliteDatabase extends CRUD {
   String get userNameColumn => _userNameColumn;
 
   String get userIdColumn => _userIdColumn;
+
   final String _productTable = "product";
   final String _productIdColumn = "product_id";
   final String _productNameColumn = "product_name";
@@ -66,8 +67,12 @@ class MySqfliteDatabase extends CRUD {
     return deleted == 0 ? false : true;
   }
 
- Future<bool> deleteFromUser({required int id})  {
-   return delete(tableName: _userTable, where: "$_userIdColumn==$id");
+  Future<bool> deleteFromUser({required int id}) {
+    return delete(tableName: _userTable, where: "$_userIdColumn==$id");
+  }
+
+  Future<bool> deleteFromProduct({required int id}) {
+    return delete(tableName: _productTable, where: "$_productIdColumn==$id");
   }
 
   Future<bool> insertToUser({required String userName}) {
@@ -120,21 +125,40 @@ class MySqfliteDatabase extends CRUD {
 
   Future<bool> updateToUser({required String name, required int id}) async {
     return update(
+      tableName: _userTable,
       values: {_userIdColumn: id, _userNameColumn: name},
       where: "$_userIdColumn=$id",
+    );
+  }
+
+  Future<bool> updateToProduct({
+    required String name,
+    required double price,
+    required int count,
+    required int id,
+  }) async {
+    return update(
+      tableName: _productTable,
+      values: {
+        // _productIdColumn: id,
+        _productNameColumn: name,
+        _productCountColumn: count,
+        _productPriceColumn: price,
+      },
+      where: "$_productIdColumn=$id",
     );
   }
 
   @override
   Future<bool> update({
     required Map<String, Object?> values,
-    // required String userName,
+    required String tableName,
     required String where,
   }) async {
     await initDatabase();
 
     int updated = await _database!.update(
-      _userTable,
+      tableName,
       //     {
       //   _userNameColumn: userName,
       // },
