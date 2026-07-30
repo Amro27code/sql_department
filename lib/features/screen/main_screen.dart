@@ -8,6 +8,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: .center,
         spacing: 15,
         children: [
           ElevatedButton(
