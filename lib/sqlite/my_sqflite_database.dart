@@ -94,6 +94,19 @@ class MySqfliteDatabase extends CRUD {
     );
   }
 
+  Future<bool> insertToSales({
+    required String userName,
+    required String productName,
+  }) async {
+    return insert(
+      tableName: _salesTable,
+      values: {
+        _salesProductNameColumn: productName,
+        _salesUserNameColumn: userName,
+      },
+    );
+  }
+
   @override
   Future<bool> insert({
     required Map<String, Object?> values,
@@ -112,6 +125,10 @@ class MySqfliteDatabase extends CRUD {
 
   Future<List<Map<String, Object?>>> selectProduct() async {
     return select(tableName: _productTable);
+  }
+
+  Future<List<Map<String, Object?>>> selectSales() async {
+    return select(tableName: _salesTable);
   }
 
   @override
