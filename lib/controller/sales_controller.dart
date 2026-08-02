@@ -17,8 +17,10 @@ class SalesController {
 
   void initial() async {
     await selectUser();
+    if (dataProductSales.isNotEmpty)
     itemUserSelected = dataUserSales[0]["user_id"] as int?;
     await selectProduct();
+    if (dataProductSales.isNotEmpty)
     itemProductSelected = dataProductSales[0]["product_id"] as int?;
   }
 
@@ -38,13 +40,18 @@ class SalesController {
     MySqfliteDatabase db = MySqfliteDatabase();
     salesData = await db.selectSales();
   }
+  Future<void> selectTSales() async {
+    MySqfliteDatabase db = MySqfliteDatabase();
+    var a= await db.selectTSales();
+    print( a.length);
+  }
 
   Future<void> insert({
-    required String userName,
-    required String productName,
+    required int userId,
+    required int productId,
   }) async {
     MySqfliteDatabase db = MySqfliteDatabase();
-    await db.insertToSales(userName: userName, productName: productName);
+    await db.insertToSales(userId: userId, productId: productId);
     selectSales();
     // selectUser();
     // selectProduct();

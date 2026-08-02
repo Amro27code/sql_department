@@ -20,8 +20,8 @@ class MySqfliteDatabase extends CRUD {
 
   final String _salesTable = "sales";
   final String _salesIdColumn = "sales_id";
-  final String _salesProductNameColumn = "sales_product_name";
-  final String _salesUserNameColumn = "sales_user_name";
+  final String _salesProductIDColumn = "sales_product_id";
+  final String _salesUserIDColumn = "sales_user_id";
 
   Database? _database;
 
@@ -31,10 +31,16 @@ class MySqfliteDatabase extends CRUD {
     String managementDatabaseName = "management.db";
     String myPath = join(path, managementDatabaseName);
 
-    int version = 1;
+    int version = 2;
     _database ??= await sqflite.openDatabase(
       myPath,
       version: version,
+      onOpen: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
+      onUpgrade: (db, oldVersion, newVersion) {
+        print(db);
+        print(oldVersion);
+        print(newVersion);
+      },
       onCreate: _onCreate,
     );
     return _database!;
@@ -52,8 +58,11 @@ class MySqfliteDatabase extends CRUD {
     await db.execute(
       "CREATE TABLE IF NOT EXISTS $_salesTable"
       " ($_salesIdColumn INTEGER PRIMARY KEY AUTOINCREMENT,"
-      "$_salesUserNameColumn TEXT,"
-      "$_salesProductNameColumn TEXT);",
+      "$_salesUserIDColumn INTEGER,"
+      "$_salesProductIDColumn INTEGER,"
+      "CONSTRAINT user_relations FOREIGN KEY ($_salesUserIDColumn) REFERENCES $_userTable ($_userIdColumn) ON DELETE CASCADE ON UPDATE CASCADE,"
+      "CONSTRAINT product_relations FOREIGN KEY ($_salesProductIDColumn) REFERENCES $_productTable ($_productIdColumn) ON DELETE CASCADE ON UPDATE CASCADE"
+      ");",
     );
   }
 
@@ -95,15 +104,12 @@ class MySqfliteDatabase extends CRUD {
   }
 
   Future<bool> insertToSales({
-    required String userName,
-    required String productName,
+    required int userId,
+    required int productId,
   }) async {
     return insert(
       tableName: _salesTable,
-      values: {
-        _salesProductNameColumn: productName,
-        _salesUserNameColumn: userName,
-      },
+      values: {_salesProductIDColumn: productId, _salesUserIDColumn: userId},
     );
   }
 
@@ -128,7 +134,11 @@ class MySqfliteDatabase extends CRUD {
   }
 
   Future<List<Map<String, Object?>>> selectSales() async {
-    return select(tableName: _salesTable);
+    return selectInSales();
+  }
+
+  Future<List<Map<String, Object?>>> selectTSales() async {
+    return selectSales();
   }
 
   @override
@@ -136,6 +146,18 @@ class MySqfliteDatabase extends CRUD {
     await initDatabase();
 
     List<Map<String, Object?>> data = await _database!.query(tableName);
+    await _database!.close();
+    return data;
+  }
+
+  Future<List<Map<String, Object?>>> selectInSales() async {
+    await initDatabase();
+
+    List<Map<String, Object?>> data = await _database!.rawQuery(
+      "SELECT $_userNameColumn,$_productNameColumn "
+      "FROM $_userTable,$_productTable,$_salesTable "
+      "WHERE $_salesProductIDColumn==$_productIdColumn AND $_salesUserIDColumn==$_userIdColumn",
+    );
     await _database!.close();
     return data;
   }

@@ -77,10 +77,10 @@ class _SalesScreenState extends State<SalesScreen> {
                                   as int,
                           child: Text(
                             "${_salesController.dataProductSales[i]["product_name"]}"
-                                    "  "
-                                    "${_salesController.dataProductSales[i]["price"]}" +
-                                "  "
-                                    "${_salesController.dataProductSales[i]["count"]}",
+                            "  "
+                            "${_salesController.dataProductSales[i]["price"]}"
+                            "  "
+                            "${_salesController.dataProductSales[i]["count"]}",
                           ),
                         ),
                     ],
@@ -98,6 +98,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   ElevatedButton(
                     onPressed: () {
                       _salesController.selectSales();
+                      _salesController.selectTSales();
                       setState(() {});
                     },
                     child: Text("Refresh"),
@@ -116,23 +117,24 @@ class _SalesScreenState extends State<SalesScreen> {
                                 element["product_id"] ==
                                 _salesController.itemProductSelected,
                           );
-                      print(
-                        _salesController.dataUserSales[indexUser]["user_name"],
-                      );
-                      print(
-                        _salesController
-                            .dataProductSales[indexProduct]["product_name"],
-                      );
+                      // print(
+                      //   _salesController.dataUserSales[indexUser]["user_name"],
+                      // );
+                      // print(
+                      //   _salesController
+                      //       .dataProductSales[indexProduct]["product_name"],
+                      // );
 
                       await _salesController.insert(
-                        userName:
+                        userId:
+                            // _salesController.itemUserSelected??0,
+                            _salesController.dataUserSales[indexUser]["user_id"]
+                                as int,
+                        productId:
                             _salesController
-                                    .dataUserSales[indexUser]["user_name"]
-                                as String,
-                        productName:
-                            _salesController
-                                    .dataProductSales[indexProduct]["product_name"]
-                                as String,
+                                    .dataProductSales[indexProduct]["product_id"]
+                                as int,
+                        // _salesController.itemProductSelected??0
                       );
                     },
                     child: Text("add"),
@@ -145,10 +147,10 @@ class _SalesScreenState extends State<SalesScreen> {
                     mainAxisAlignment: .spaceBetween,
                     children: [
                       Text(
-                        "User Name: ${_salesController.salesData[index]["sales_user_name"]}",
+                        "User Name: ${_salesController.salesData[index]["user_name"]}",
                       ),
                       Text(
-                        "Product name:${_salesController.salesData[index]["sales_product_name"]}",
+                        "Product name:${_salesController.salesData[index]["product_name"]}",
                       ),
                     ],
                   ),
